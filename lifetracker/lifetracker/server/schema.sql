@@ -1,0 +1,22 @@
+-- PostgreSQL schema for LifeTracker AI backend
+
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS tasks (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  latitude NUMERIC(10, 7) NOT NULL,
+  longitude NUMERIC(10, 7) NOT NULL,
+  zone VARCHAR(100) NOT NULL,
+  duration_minutes INTEGER DEFAULT 0,
+  focus_score INTEGER NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
