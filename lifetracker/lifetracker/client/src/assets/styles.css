@@ -1,3 +1,35 @@
+:root {
+  --page-bg: #f7f9fc;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --sidebar-bg: #111827;
+  --sidebar-text: #ffffff;
+  --text-primary: #1f2937;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border: #e5e7eb;
+  --panel-shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
+  --primary: #2563eb;
+  --success: #10b981;
+  --danger: #dc2626;
+}
+
+body.theme-dark {
+  --page-bg: #0b1120;
+  --surface: #111827;
+  --surface-alt: #1a2236;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #e2e8f0;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #a5b4fc;
+  --border: #27334a;
+  --panel-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  --primary: #60a5fa;
+  --success: #34d399;
+  --danger: #f87171;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -5,8 +37,8 @@
 body {
   margin: 0;
   font-family: 'Inter', system-ui, sans-serif;
-  background: #f7f9fc;
-  color: #1f2937;
+  background: var(--page-bg);
+  color: var(--text-primary);
 }
 
 button,
@@ -31,9 +63,9 @@ button {
   max-width: 420px;
   margin: auto;
   padding: 40px;
-  background: white;
+  background: var(--surface);
   border-radius: 24px;
-  box-shadow: 0 18px 60px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--panel-shadow);
 }
 
 .auth-panel h1 {
@@ -41,7 +73,7 @@ button {
 }
 
 .auth-panel p {
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 .auth-panel form {
@@ -55,14 +87,15 @@ button {
 .auth-panel select {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   border-radius: 12px;
-  background: #f9fafb;
+  background: var(--surface-alt);
+  color: var(--text-primary);
 }
 
 .auth-panel button {
   border: none;
-  background: #2563eb;
+  background: var(--primary);
   color: white;
   border-radius: 12px;
   padding: 14px;
@@ -86,8 +119,8 @@ button {
 
 .sidebar {
   min-width: 260px;
-  background: #111827;
-  color: white;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
@@ -112,20 +145,22 @@ button {
 
 .sidebar-link {
   display: block;
-  color: #d1d5db;
+  color: var(--sidebar-text);
+  opacity: 0.85;
   margin: 12px 0;
   text-decoration: none;
 }
 
 .sidebar-link.router-link-active {
-  color: white;
+  color: var(--surface);
+  opacity: 1;
 }
 
 .secondary {
   margin-top: auto;
   background: transparent;
-  border: 1px solid #ffffff33;
-  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--sidebar-text);
   padding: 12px 16px;
   border-radius: 12px;
 }
@@ -154,10 +189,10 @@ button {
 }
 
 .stat-card {
-  background: white;
+  background: var(--surface);
   border-radius: 24px;
   padding: 24px;
-  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--panel-shadow);
 }
 
 .panel-header span {
@@ -186,9 +221,9 @@ button {
   display: flex;
   justify-content: space-between;
   padding: 12px 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 16px;
-  background: #f8fafc;
+  background: var(--surface-alt);
 }
 
 .zone-item span {
@@ -207,10 +242,10 @@ button {
 }
 
 .task-panel {
-  background: white;
+  background: var(--surface);
   border-radius: 24px;
   padding: 24px;
-  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--panel-shadow);
 }
 
 .panel-header {
@@ -235,9 +270,9 @@ button {
   align-items: center;
   gap: 16px;
   padding: 18px 20px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border);
   border-radius: 18px;
-  background: #f8fafc;
+  background: var(--surface-alt);
 }
 
 .task-item strong {
@@ -294,10 +329,10 @@ button {
 }
 
 .panel {
-  background: white;
+  background: var(--surface);
   border-radius: 24px;
   padding: 24px;
-  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--panel-shadow);
 }
 
 .assistant-card,
@@ -419,9 +454,9 @@ button {
   margin: auto;
   width: min(1000px, 100%);
   padding: 32px;
-  background: white;
+  background: var(--surface);
   border-radius: 24px;
-  box-shadow: 0 18px 60px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--panel-shadow);
 }
 
 .profile-dashboard {
@@ -634,8 +669,9 @@ button {
   width: 100%;
   padding: 12px;
   border-radius: 12px;
-  border: 1px solid #d1d5db;
-  background: #f9fafb;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text-primary);
 }
 
 .hint {

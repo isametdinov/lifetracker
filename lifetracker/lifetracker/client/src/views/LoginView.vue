@@ -1,18 +1,18 @@
 <template>
   <main class="auth-page">
     <section class="auth-panel">
-      <h1>LifeTracker AI</h1>
-      <p>Sign in to your productivity dashboard.</p>
+      <h1>{{ uiStore.translate('signInTitle') }}</h1>
+      <p>{{ uiStore.translate('signInDescription') }}</p>
       <form @submit.prevent="onSubmit">
-        <label>Email</label>
+        <label>{{ uiStore.translate('email') }}</label>
         <input v-model="email" type="email" required />
-        <label>Password</label>
+        <label>{{ uiStore.translate('password') }}</label>
         <input v-model="password" type="password" required />
-        <button type="submit">Sign In</button>
+        <button type="submit">{{ uiStore.translate('signIn') }}</button>
       </form>
-      <p class="auth-note">Use admin@gmail.com / admin123 to sign in after registering.</p>
+      <p class="auth-note">{{ uiStore.translate('defaultAccountNote') }}</p>
       <p class="auth-switch">
-        Don't have an account? <router-link to="/register">Register</router-link>
+        {{ uiStore.translate('haveAccount') }} <router-link to="/register">{{ uiStore.translate('register') }}</router-link>
       </p>
       <p v-if="error" class="error">{{ error }}</p>
     </section>
@@ -22,8 +22,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUiStore } from '../stores/ui';
 import { useUserStore } from '../stores/user';
 
+const uiStore = useUiStore();
 const email = ref('admin@gmail.com');
 const password = ref('admin123');
 const error = ref('');

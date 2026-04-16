@@ -1,8 +1,8 @@
 <template>
   <div class="youtube-card">
     <div class="youtube-header">
-      <h3>Quick YouTube Access</h3>
-      <p>Open motivational music and study playlists instantly.</p>
+      <h3>{{ uiStore.translate('quickYoutubeAccess') }}</h3>
+      <p>{{ uiStore.translate('motivationDescription') }}</p>
     </div>
 
     <div class="youtube-list">
@@ -11,13 +11,17 @@
           <strong>{{ video.title }}</strong>
           <p>{{ video.description }}</p>
         </div>
-        <span>Go</span>
+        <span>{{ uiStore.translate('go') }}</span>
       </a>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useUiStore } from '../stores/ui';
+
+const uiStore = useUiStore();
+
 const videos = [
   {
     title: 'Focus & Study Music',

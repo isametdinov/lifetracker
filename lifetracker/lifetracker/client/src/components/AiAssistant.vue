@@ -3,8 +3,8 @@
   <div class="assistant-card">
     <div class="assistant-header">
       <div>
-        <h3>AI Productivity Coach</h3>
-        <p>Chat with a Trinity-powered coach for focus, motivation, and task support.</p>
+        <h3>{{ uiStore.translate('aiAssistantTitle') }}</h3>
+        <p>{{ uiStore.translate('aiAssistantSubtitle') }}</p>
       </div>
       <span class="assistant-badge">Trinity AI</span>
     </div>
@@ -12,28 +12,28 @@
     <div class="assistant-body">
       <div v-if="reviewTask" class="assistant-review">
         <div class="assistant-summary">
-          <strong>Task review</strong>
-          <p>Tell me about "{{ reviewTask.title }}" to complete it.</p>
+          <strong>{{ uiStore.translate('taskReviewTitle') }}</strong>
+          <p>{{ uiStore.translate('answerTaskPrompt', { title: reviewTask.title }) }}</p>
         </div>
 
         <div class="assistant-question">
-          <strong>Question {{ currentQuestion + 1 }} of {{ questions.length }}</strong>
+          <strong>{{ uiStore.translate('questionCount', { current: currentQuestion + 1, total: questions.length }) }}</strong>
           <p>{{ questions[currentQuestion] }}</p>
-          <textarea v-model="reviewAnswer" rows="4" placeholder="Type your answer here..."></textarea>
+          <textarea v-model="reviewAnswer" rows="4" :placeholder="uiStore.translate('questionAnswerPrompt')"></textarea>
         </div>
 
-        <button @click="submitAnswer">Submit Answer</button>
+        <button type="button" @click="submitAnswer">{{ uiStore.translate('submitAnswer') }}</button>
 
         <div v-if="assistantResponse" class="assistant-response">
-          <strong>Review note</strong>
+          <strong>{{ uiStore.translate('reviewNote') }}</strong>
           <p>{{ assistantResponse }}</p>
         </div>
       </div>
 
       <div v-else>
         <div class="assistant-summary">
-          <strong>Trinity Chat</strong>
-          <p>Ask about productivity, planning, or how to improve your task flow.</p>
+          <strong>{{ uiStore.translate('trinityChatTitle') }}</strong>
+          <p>{{ uiStore.translate('trinityChatSubtitle') }}</p>
         </div>
 
         <div v-if="!chatLog.length && !assistantResponse" class="assistant-hint">
@@ -46,20 +46,20 @@
             :key="index"
             :class="['chat-message', message.role === 'user' ? 'user-message' : 'assistant-message']"
           >
-            <strong>{{ message.role === 'user' ? 'You' : 'Assistant' }}</strong>
+            <strong>{{ message.role === 'user' ? uiStore.translate('you') : uiStore.translate('assistant') }}</strong>
             <p>{{ message.content }}</p>
           </div>
         </div>
 
         <div class="assistant-actions">
-          <input v-model="userPrompt" placeholder="Type a question for the AI assistant" @keyup.enter="generateAdvice" />
-          <button :disabled="isLoading" @click="generateAdvice">
-            {{ isLoading ? 'Thinking...' : 'Ask Assistant' }}
+          <input v-model="userPrompt" :placeholder="uiStore.translate('typeQuestionPlaceholder')" @keyup.enter="generateAdvice" />
+          <button type="button" :disabled="isLoading" @click="generateAdvice">
+            {{ isLoading ? uiStore.translate('thinking') : uiStore.translate('askAssistant') }}
           </button>
         </div>
 
         <div v-if="assistantResponse && !chatLog.length" class="assistant-response">
-          <strong>Assistant says</strong>
+          <strong>{{ uiStore.translate('assistantSays') }}</strong>
           <p>{{ assistantResponse }}</p>
         </div>
       </div>
@@ -69,7 +69,10 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { useUiStore } from '../stores/ui';
 import api from '../services/api';
+
+const uiStore = useUiStore();
 
 const props = defineProps({
   summary: {

@@ -1,40 +1,40 @@
 <template>
   <section class="dashboard-page">
     <aside class="sidebar">
-      <div class="brand">LifeTracker AI</div>
+      <div class="brand">{{ uiStore.translate('appName') }}</div>
       <nav>
-        <router-link to="/dashboard" class="sidebar-link">Dashboard</router-link>
-        <router-link to="/profile" class="sidebar-link">Profile</router-link>
+        <router-link to="/dashboard" class="sidebar-link">{{ uiStore.translate('dashboard') }}</router-link>
+        <router-link to="/profile" class="sidebar-link">{{ uiStore.translate('profile') }}</router-link>
       </nav>
-      <button class="secondary" @click="logout">Logout</button>
+      <button class="secondary" @click="logout">{{ uiStore.translate('logout') }}</button>
     </aside>
 
     <main class="dashboard-main">
       <header class="dashboard-header">
         <div>
-          <h2>Welcome back, {{ userStore.user?.name || 'Tracker' }}</h2>
-          <p>Here is your quick overview for staying focused and productive.</p>
+          <h2>{{ uiStore.translate('welcomeBack') }}, {{ userStore.user?.name || 'Tracker' }}</h2>
+          <p>{{ uiStore.translate('overview') }}</p>
         </div>
       </header>
 
       <section class="stats-grid">
         <article class="stat-card">
-          <h3>Total tasks</h3>
+          <h3>{{ uiStore.translate('totalTasks') }}</h3>
           <p>{{ taskStore.summary?.totalTasks ?? taskStore.tasks.length }}</p>
         </article>
 
         <article class="stat-card">
-          <h3>Completed</h3>
+          <h3>{{ uiStore.translate('completed') }}</h3>
           <p>{{ completedCount }}</p>
         </article>
 
         <article class="stat-card">
-          <h3>Pending</h3>
+          <h3>{{ uiStore.translate('pending') }}</h3>
           <p>{{ pendingCount }}</p>
         </article>
 
         <article class="stat-card">
-          <h3>Average focus</h3>
+          <h3>{{ uiStore.translate('averageFocus') }}</h3>
           <p>{{ taskStore.summary?.averageFocus ?? '—' }}</p>
         </article>
       </section>
@@ -42,48 +42,48 @@
       <section class="dashboard-grid">
         <article class="panel">
           <div class="panel-header">
-            <h3>AI Productivity Assistant</h3>
-            <span>Smart task guidance</span>
+            <h3>{{ uiStore.translate('aiAssistantTitle') }}</h3>
+            <span>{{ uiStore.translate('aiAssistantSubtitle') }}</span>
           </div>
           <AiAssistant :summary="taskStore.summary || { totalTasks: 0, totalMinutes: 0, averageFocus: 0, zoneBreakdown: [] }" />
         </article>
 
         <article class="panel">
           <div class="panel-header">
-            <h3>Focus analytics</h3>
-            <span>See your task performance</span>
+            <h3>{{ uiStore.translate('focusAnalytics') }}</h3>
+            <span>{{ uiStore.translate('overview') }}</span>
           </div>
           <AnalyticsChart :summary="taskStore.summary || { totalTasks: 0, totalMinutes: 0, averageFocus: 0 }" />
         </article>
 
         <article class="panel">
           <div class="panel-header">
-            <h3>Motivation hub</h3>
-            <span>Music for study and work</span>
+            <h3>{{ uiStore.translate('motivationHub') }}</h3>
+            <span>{{ uiStore.translate('focusAnalytics') }}</span>
           </div>
           <YouTubePanel />
         </article>
 
         <article class="panel">
           <div class="panel-header">
-            <h3>Recent activity map</h3>
-            <span>Tracked locations</span>
+            <h3>{{ uiStore.translate('recentActivityMap') }}</h3>
+            <span>{{ uiStore.translate('overview') }}</span>
           </div>
           <MapView />
         </article>
 
         <article class="panel">
           <div class="panel-header">
-            <h3>Log a new activity</h3>
-            <span>Quick capture</span>
+            <h3>{{ uiStore.translate('logNewActivity') }}</h3>
+            <span>{{ uiStore.translate('overview') }}</span>
           </div>
           <TaskInput @task-created="refreshDashboard" />
         </article>
 
         <article class="panel task-panel">
           <div class="panel-header">
-            <h3>Recent tasks</h3>
-            <span>{{ taskStore.tasks.length }} tasks logged</span>
+            <h3>{{ uiStore.translate('recentTasks') }}</h3>
+            <span>{{ taskStore.tasks.length }} {{ uiStore.translate('tasksLogged') }}</span>
           </div>
 
           <ul class="task-list">
@@ -99,7 +99,7 @@
                   :disabled="task.completed"
                   @click="startReview(task)"
                 >
-                  {{ task.completed ? 'Completed' : 'Finish' }}
+                  {{ task.completed ? uiStore.translate('completedStatus') : uiStore.translate('finish') }}
                 </button>
                 <button
                   v-if="task.completed"
@@ -107,17 +107,17 @@
                   class="open-button"
                   @click="openTask(task)"
                 >
-                  Open
+                  {{ uiStore.translate('open') }}
                 </button>
-                <span class="task-status">{{ task.completed ? 'Done' : 'Open' }}</span>
+                <span class="task-status">{{ task.completed ? uiStore.translate('done') : uiStore.translate('open') }}</span>
               </div>
             </li>
           </ul>
 
-          <p v-if="!taskStore.tasks.length" class="empty-state">No tasks yet. Add your first task from the form above.</p>
+          <p v-if="!taskStore.tasks.length" class="empty-state">{{ uiStore.translate('noTasksYet') }}</p>
 
           <div v-if="zoneBreakdown.length" class="zone-breakdown">
-            <h4>Zone breakdown</h4>
+            <h4>{{ uiStore.translate('zoneBreakdownTitle') }}</h4>
             <ul>
               <li v-for="zone in zoneBreakdown" :key="zone.zone" class="zone-item">
                 <span>{{ zone.zone }}</span>
@@ -131,8 +131,8 @@
       <section v-if="activeReviewTask" class="review-panel">
         <div class="panel">
           <div class="panel-header">
-            <h3>Task review</h3>
-            <span>Answer a few questions before completing this task</span>
+            <h3>{{ uiStore.translate('taskReviewTitle') }}</h3>
+            <span>{{ uiStore.translate('taskReviewSubtitle') }}</span>
           </div>
           <AiAssistant
             :summary="taskStore.summary || { totalTasks: 0, totalMinutes: 0, averageFocus: 0, zoneBreakdown: [] }"
@@ -155,10 +155,12 @@ import TaskInput from '../components/TaskInput.vue';
 import YouTubePanel from '../components/YouTubePanel.vue';
 import { useUserStore } from '../stores/user';
 import { useTaskStore } from '../stores/tasks';
+import { useUiStore } from '../stores/ui';
 
 const router = useRouter();
 const userStore = useUserStore();
 const taskStore = useTaskStore();
+const uiStore = useUiStore();
 
 const completedCount = computed(() => taskStore.tasks.filter((task) => task.completed).length);
 const pendingCount = computed(() => taskStore.tasks.filter((task) => !task.completed).length);

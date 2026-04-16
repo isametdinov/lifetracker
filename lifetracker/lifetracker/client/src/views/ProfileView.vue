@@ -1,5 +1,14 @@
 <template>
   <section class="profile-page">
+    <aside class="sidebar">
+      <div class="brand">{{ uiStore.translate('appName') }}</div>
+      <nav>
+        <router-link to="/dashboard" class="sidebar-link">{{ uiStore.translate('dashboard') }}</router-link>
+        <router-link to="/profile" class="sidebar-link">{{ uiStore.translate('profile') }}</router-link>
+      </nav>
+      <button class="secondary" @click="logout">{{ uiStore.translate('logout') }}</button>
+    </aside>
+
     <div class="profile-panel profile-dashboard">
       <header class="profile-header">
         <div class="profile-heading">
@@ -8,55 +17,55 @@
               <span v-if="!profilePictureUrl">{{ profileInitials }}</span>
             </div>
             <label class="avatar-upload">
-              Change photo
+              {{ uiStore.translate('changePhoto') }}
               <input type="file" accept="image/*" @change="handleAvatarChange" />
             </label>
           </div>
           <div>
-            <input class="profile-name-input" v-model="profileName" placeholder="Your display name" />
-            <p>Update your profile name and picture to personalize the dashboard.</p>
+            <input class="profile-name-input" v-model="profileName" :placeholder="uiStore.translate('yourDisplayName')" />
+            <p>{{ uiStore.translate('updateProfileNote') }}</p>
           </div>
         </div>
 
-        <div class="level-chip">Rank {{ rankTitle }}</div>
+        <div class="level-chip">{{ uiStore.translate('rank') }} {{ rankTitle }}</div>
       </header>
 
       <section class="profile-grid">
         <article class="profile-card stats-card">
-          <h3>Performance summary</h3>
+          <h3>{{ uiStore.translate('performanceSummary') }}</h3>
           <div class="stat-grid">
             <div>
               <span>{{ summary?.totalTasks ?? 0 }}</span>
-              <p>Tasks completed</p>
+              <p>{{ uiStore.translate('tasksCompleted') }}</p>
             </div>
             <div>
               <span>{{ summary?.totalMinutes ?? 0 }}</span>
-              <p>Minutes logged</p>
+              <p>{{ uiStore.translate('minutesLogged') }}</p>
             </div>
             <div>
               <span>{{ summary?.averageFocus ?? 0 }}%</span>
-              <p>Average focus</p>
+              <p>{{ uiStore.translate('averageFocusLabel') }}</p>
             </div>
           </div>
         </article>
 
         <article class="profile-card growth-card">
-          <h3>Experience & Growth</h3>
+          <h3>{{ uiStore.translate('experienceGrowth') }}</h3>
           <div class="growth-bar">
             <span class="growth-label">{{ experiencePoints }} XP</span>
             <div class="progress-track">
               <div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
             </div>
-            <p>Level {{ userLevel }} · {{ progressPercent }}% to next level</p>
+            <p>{{ uiStore.translate('levelToNext', { level: userLevel.value, percent: progressPercent.value }) }}</p>
           </div>
         </article>
 
         <article class="profile-card badge-card">
-          <h3>Mastery results</h3>
+          <h3>{{ uiStore.translate('masteryResults') }}</h3>
           <ul>
-            <li>Focus streak: {{ streakText }}</li>
-            <li>Top zone: {{ topZone || 'No activity yet' }}</li>
-            <li>Study power: {{ studyPower }}</li>
+            <li>{{ uiStore.translate('focusStreak') }}: {{ streakText }}</li>
+            <li>{{ uiStore.translate('topZone') }}: {{ topZone || uiStore.translate('noStreakYet') }}</li>
+            <li>{{ uiStore.translate('studyPower') }}: {{ studyPower }}</li>
           </ul>
         </article>
       </section>
@@ -64,41 +73,41 @@
       <section class="profile-footer">
         <div class="profile-details">
           <div>
-            <label>Email</label>
+            <label>{{ uiStore.translate('email') }}</label>
             <input type="email" :value="user?.email" disabled />
           </div>
           <div>
-            <label>Current rank</label>
+            <label>{{ uiStore.translate('currentRank') }}</label>
             <input type="text" :value="rankTitle" disabled />
           </div>
         </div>
         <button class="primary" :disabled="isSaving || !profileName.trim()" @click="saveProfile">
-          {{ isSaving ? 'Saving...' : 'Save profile' }}
+          {{ isSaving ? uiStore.translate('saving') : uiStore.translate('saveProfile') }}
         </button>
       </section>
 
       <section class="activity-results">
         <div class="activity-results-header">
-          <h3>Activity results</h3>
-          <p>Recent insights from your productivity and focus tracking.</p>
+          <h3>{{ uiStore.translate('activityResults') }}</h3>
+          <p>{{ uiStore.translate('recentInsights') }}</p>
         </div>
 
         <div class="activity-grid">
           <div class="activity-card">
             <strong>{{ summary?.totalTasks ?? 0 }}</strong>
-            <span>Tasks completed</span>
+            <span>{{ uiStore.translate('tasksCompleted') }}</span>
           </div>
           <div class="activity-card">
             <strong>{{ summary?.totalMinutes ?? 0 }}</strong>
-            <span>Minutes logged</span>
+            <span>{{ uiStore.translate('minutesLogged') }}</span>
           </div>
           <div class="activity-card">
             <strong>{{ summary?.averageFocus ?? 0 }}%</strong>
-            <span>Average focus</span>
+            <span>{{ uiStore.translate('averageFocusLabel') }}</span>
           </div>
           <div class="activity-card">
-            <strong>{{ topZone || 'No activity yet' }}</strong>
-            <span>Top zone</span>
+            <strong>{{ topZone || uiStore.translate('noStreakYet') }}</strong>
+            <span>{{ uiStore.translate('topZone') }}</span>
           </div>
         </div>
       </section>
@@ -110,11 +119,11 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
-import { useTaskStore } from '../stores/tasks';
-
+import { useTaskStore } from '../stores/tasks';import { useUiStore } from '../stores/ui';
 const router = useRouter();
 const userStore = useUserStore();
 const taskStore = useTaskStore();
+const uiStore = useUiStore();
 const user = userStore;
 
 const profileName = ref('');
@@ -183,6 +192,11 @@ const saveProfile = async () => {
   } finally {
     isSaving.value = false;
   }
+};
+
+const logout = () => {
+  userStore.logout();
+  router.push('/login');
 };
 
 watch(

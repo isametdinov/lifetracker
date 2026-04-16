@@ -1,25 +1,25 @@
 <template>
   <form class="task-form" @submit.prevent="submitTask">
-    <label>Task Title</label>
+    <label>{{ uiStore.translate('taskTitle') }}</label>
     <input v-model="title" type="text" required />
 
-    <label>Description</label>
+    <label>{{ uiStore.translate('description') }}</label>
     <textarea v-model="description" rows="3" />
 
-    <label>Zone</label>
+    <label>{{ uiStore.translate('zone') }}</label>
     <select v-model="zone" required>
-      <option disabled value="">Select zone</option>
-      <option>University</option>
-      <option>IT Park</option>
-      <option>Office</option>
-      <option>Home</option>
-      <option>Mall</option>
+      <option disabled value="">{{ uiStore.translate('selectZone') }}</option>
+      <option>{{ uiStore.translate('university') }}</option>
+      <option>{{ uiStore.translate('itPark') }}</option>
+      <option>{{ uiStore.translate('office') }}</option>
+      <option>{{ uiStore.translate('home') }}</option>
+      <option>{{ uiStore.translate('mall') }}</option>
     </select>
 
-    <label>Duration (minutes)</label>
+    <label>{{ uiStore.translate('durationMinutes') }}</label>
     <input v-model.number="durationMinutes" type="number" min="0" />
 
-    <button type="submit">Log Activity</button>
+    <button type="submit">{{ uiStore.translate('logActivity') }}</button>
 
     <p v-if="message" class="success">{{ message }}</p>
   </form>
@@ -28,7 +28,9 @@
 <script setup>
 import { defineEmits, ref, onMounted } from 'vue';
 import { useTaskStore } from '../stores/tasks';
+import { useUiStore } from '../stores/ui';
 
+const uiStore = useUiStore();
 const emit = defineEmits(['task-created']);
 const title = ref('');
 const description = ref('');
@@ -70,12 +72,12 @@ const submitTask = async () => {
     description.value = '';
     zone.value = '';
     durationMinutes.value = 30;
-    message.value = 'Activity logged successfully.';
+    message.value = uiStore.translate('activityLogged');
     setTimeout(() => (message.value = ''), 3000);
     await taskStore.loadSummary();
     emit('task-created');
   } catch (err) {
-    message.value = 'Unable to log activity.';
+    message.value = uiStore.translate('unableLogActivity');
   }
 };
 </script>
