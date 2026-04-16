@@ -10,6 +10,7 @@
         <input v-model="password" type="password" required />
         <button type="submit">Sign In</button>
       </form>
+      <p class="auth-note">Use admin@gmail.com / admin123 to sign in after registering.</p>
       <p class="auth-switch">
         Don't have an account? <router-link to="/register">Register</router-link>
       </p>
@@ -23,8 +24,8 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
 
-const email = ref('');
-const password = ref('');
+const email = ref('admin@gmail.com');
+const password = ref('admin123');
 const error = ref('');
 const router = useRouter();
 const userStore = useUserStore();

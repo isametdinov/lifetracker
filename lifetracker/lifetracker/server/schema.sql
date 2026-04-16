@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(100) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
+  profile_picture_url TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -18,5 +19,6 @@ CREATE TABLE IF NOT EXISTS tasks (
   zone VARCHAR(100) NOT NULL,
   duration_minutes INTEGER DEFAULT 0,
   focus_score INTEGER NOT NULL,
+  completed BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

@@ -22,9 +22,9 @@ const createTask = async (req, res) => {
     const focusScore = calculateFocusScore(durationMinutes || 0, zone);
     const result = await pool.query(
       `INSERT INTO tasks
-        (user_id, title, description, latitude, longitude, zone, duration_minutes, focus_score)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-       RETURNING id, title, description, latitude, longitude, zone, duration_minutes AS "durationMinutes", focus_score AS "focusScore", created_at`,
+        (user_id, title, description, latitude, longitude, zone, duration_minutes, focus_score, completed)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, FALSE)
+       RETURNING id, title, description, latitude, longitude, zone, duration_minutes AS "durationMinutes", focus_score AS "focusScore", completed, created_at`,
       [userId, title, description || '', latitude, longitude, zone, durationMinutes || 0, focusScore]
     );
 
@@ -40,7 +40,7 @@ const getTasks = async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT id, title, description, latitude, longitude, zone, duration_minutes AS "durationMinutes", focus_score AS "focusScore", created_at
+      `SELECT id, title, description, latitude, longitude, zone, duration_minutes AS "durationMinutes", focus_score AS "focusScore", completed, created_at
        FROM tasks WHERE user_id = $1 ORDER BY created_at DESC`,
       [userId]
     );
@@ -52,6 +52,30 @@ const getTasks = async (req, res) => {
   }
 };
 
+const completeTask = async (req, res) => {
+  const userId = req.user.id;
+  const taskId = req.params.id;
+
+  try {
+    const result = await pool.query(
+      `UPDATE tasks
+       SET completed = TRUE
+       WHERE id = $1 AND user_id = $2
+       RETURNING id, title, description, latitude, longitude, zone, duration_minutes AS "durationMinutes", focus_score AS "focusScore", completed, created_at`,
+      [taskId, userId]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Task not found.' });
+    }
+
+    return res.json({ task: result.rows[0] });
+  } catch (error) {
+    console.error('Complete task error:', error);
+    return res.status(500).json({ message: 'Unable to complete task.' });
+  }
+};
+
 const getSummary = async (req, res) => {
   const userId = req.user.id;
 
@@ -60,7 +84,8 @@ const getSummary = async (req, res) => {
       `SELECT
          COUNT(*) AS total_tasks,
          COALESCE(SUM(duration_minutes), 0) AS total_minutes,
-         COALESCE(ROUND(AVG(focus_score), 2), 0) AS average_focus
+         COALESCE(ROUND(AVG(focus_score), 2), 0) AS average_focus,
+         COALESCE(SUM(CASE WHEN completed THEN 1 ELSE 0 END), 0) AS completed_tasks
        FROM tasks
        WHERE user_id = $1`,
       [userId]
@@ -71,7 +96,7 @@ const getSummary = async (req, res) => {
        FROM tasks
        WHERE user_id = $1
        GROUP BY zone
-       ORDER BY zone`,
+       ORDER BY count DESC`,
       [userId]
     );
 
@@ -80,6 +105,7 @@ const getSummary = async (req, res) => {
         totalTasks: Number(stats.rows[0].total_tasks),
         totalMinutes: Number(stats.rows[0].total_minutes),
         averageFocus: Number(stats.rows[0].average_focus),
+        completedTasks: Number(stats.rows[0].completed_tasks),
         zoneBreakdown: zones.rows,
       },
     });
@@ -132,5 +158,6 @@ module.exports = {
   createTask,
   getTasks,
   getSummary,
+  completeTask,
   exportLifeHistory,
 };

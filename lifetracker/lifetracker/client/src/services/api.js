@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// Shared Axios instance for all backend API requests from the frontend
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
   headers: {
@@ -7,6 +8,7 @@ const api = axios.create({
   },
 });
 
+// Automatically attach the JWT token to API calls when present
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('lifetracker_token');
   if (token && config.headers) {

@@ -27,7 +27,7 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const result = await pool.query(
-      'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email, created_at',
+      'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email, profile_picture_url, created_at',
       [name, email, hashedPassword]
     );
 
@@ -49,7 +49,7 @@ const login = async (req, res) => {
   }
 
   try {
-    const result = await pool.query('SELECT id, name, email, password FROM users WHERE email = $1', [email]);
+    const result = await pool.query('SELECT id, name, email, password, profile_picture_url FROM users WHERE email = $1', [email]);
     if (result.rowCount === 0) {
       return res.status(401).json({ message: 'Invalid email or password.' });
     }
@@ -76,7 +76,10 @@ const me = async (req, res) => {
   }
 
   try {
-    const result = await pool.query('SELECT id, name, email, created_at FROM users WHERE id = $1', [req.user.id]);
+    const result = await pool.query(
+      'SELECT id, name, email, profile_picture_url, created_at FROM users WHERE id = $1',
+      [req.user.id]
+    );
     if (result.rowCount === 0) {
       return res.status(404).json({ message: 'User not found.' });
     }
@@ -87,8 +90,33 @@ const me = async (req, res) => {
   }
 };
 
+const updateProfile = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized.' });
+  }
+
+  const { name, profile_picture_url } = req.body || {};
+
+  try {
+    const result = await pool.query(
+      'UPDATE users SET name = COALESCE($1, name), profile_picture_url = COALESCE($2, profile_picture_url) WHERE id = $3 RETURNING id, name, email, profile_picture_url, created_at',
+      [name, profile_picture_url, req.user.id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    return res.json({ user: result.rows[0] });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    return res.status(500).json({ message: 'Unable to update profile.' });
+  }
+};
+
 module.exports = {
   register,
   login,
   me,
+  updateProfile,
 };

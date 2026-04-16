@@ -26,6 +26,11 @@ export const useUserStore = defineStore('user', {
       this.user = response.data.user;
       return response;
     },
+    async updateProfile(profileData) {
+      const response = await api.patch('/auth/me', profileData);
+      this.user = response.data.user;
+      return response;
+    },
     logout() {
       this.user = null;
       this.token = null;
