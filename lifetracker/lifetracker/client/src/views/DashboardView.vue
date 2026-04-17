@@ -146,6 +146,11 @@
 </template>
 
 <script setup>
+/*
+  Dashboard page showing user analytics, recent tasks, and AI assistance.
+  - Loads user data and task summary on mount
+  - Handles logout, task refresh, and review completion
+*/
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AnalyticsChart from '../components/AnalyticsChart.vue';

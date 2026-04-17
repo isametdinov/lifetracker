@@ -18,6 +18,11 @@
 </template>
 
 <script setup>
+/*
+  YouTube panel component exposes motivational videos.
+  - Uses uiStore for translated labels
+  - Provides quick links to focus playlists
+*/
 import { useUiStore } from '../stores/ui';
 
 const uiStore = useUiStore();

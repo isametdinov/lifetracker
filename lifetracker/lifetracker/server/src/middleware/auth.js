@@ -1,3 +1,7 @@
+/*
+  Authentication middleware checks for a bearer JWT token,
+  verifies the token, and attaches the authenticated user to req.user.
+*/
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
 

@@ -1,3 +1,9 @@
+/*
+  User store manages authentication state, profile data, and JWT storage.
+  - login/register: authenticate and save token
+  - fetchProfile/updateProfile: manage current user profile
+  - logout: clear credentials locally
+*/
 import { defineStore } from 'pinia';
 import api from '../services/api';
 

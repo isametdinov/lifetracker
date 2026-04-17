@@ -1,3 +1,7 @@
+/*
+  Auth controller handles user registration, login, profile fetch/update,
+  and JWT token creation for authenticated requests.
+*/
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');

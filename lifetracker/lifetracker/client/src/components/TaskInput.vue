@@ -26,6 +26,12 @@
 </template>
 
 <script setup>
+/*
+  Task input component captures new task details.
+  - Gathers zone, duration, location, and notes
+  - Sends the payload to the task store
+  - Emits task-created when saved successfully
+*/
 import { defineEmits, ref, onMounted } from 'vue';
 import { useTaskStore } from '../stores/tasks';
 import { useUiStore } from '../stores/ui';

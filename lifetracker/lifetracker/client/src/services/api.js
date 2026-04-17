@@ -1,3 +1,8 @@
+/*
+  Axios API service used across the frontend.
+  - Configures shared base URL and JSON headers
+  - Automatically attaches auth token from localStorage
+*/
 import axios from 'axios';
 
 // Shared Axios instance for all backend API requests from the frontend

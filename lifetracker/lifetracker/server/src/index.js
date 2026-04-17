@@ -1,3 +1,10 @@
+/*
+  Server entry point for LifeTracker.
+  - Loads environment variables
+  - Configures Express middleware
+  - Registers auth, task, and assistant API routes
+  - Handles 404 and internal server errors
+*/
 const path = require('path');
 const express = require('express');
 const cors = require('cors');

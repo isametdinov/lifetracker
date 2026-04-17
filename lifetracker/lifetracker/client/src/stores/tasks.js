@@ -1,3 +1,9 @@
+/*
+  Task store is responsible for task CRUD operations and dashboard analytics.
+  - loadTasks/loadSummary: fetch current user data
+  - createTask: add a new task and update list immediately
+  - completeTask: mark tasks done and keep local state in sync
+*/
 import { defineStore } from 'pinia';
 import api from '../services/api';
 

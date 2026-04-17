@@ -1,3 +1,9 @@
+/*
+  Assistant controller integrates with the Trinity AI API.
+  - Validates prompt input
+  - Builds request payload for Trinity
+  - Returns AI assistant responses to the frontend
+*/
 const TRINITY_API_URL = process.env.TRINITY_API_URL || 'https://api.trinity.ai/v1/chat/completions';
 
 // ====COMENT====

@@ -1,3 +1,8 @@
+/*
+  Application route definitions.
+  - Redirects root to dashboard
+  - Protects dashboard/profile for authenticated users only
+*/
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import DashboardView from '../views/DashboardView.vue';

@@ -20,6 +20,12 @@
 </template>
 
 <script setup>
+/*
+  Login view handles existing user sign-in.
+  - Uses the user store to authenticate
+  - Redirects to dashboard when successful
+  - Displays localized labels through uiStore
+*/
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUiStore } from '../stores/ui';

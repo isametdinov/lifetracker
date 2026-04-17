@@ -5,6 +5,11 @@
 </template>
 
 <script setup>
+/*
+  Map view displays a location map for productivity zones.
+  - Sets up Leaflet map on mount
+  - Shows a sample marker on Tashkent coordinates
+*/
 import { ref, onMounted } from 'vue';
 import L from 'leaflet';
 

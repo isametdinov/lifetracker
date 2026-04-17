@@ -116,10 +116,17 @@
 </template>
 
 <script setup>
+/*
+  Profile page allows users to update profile details and view progress.
+  - Loads user and summary data on mount
+  - Tracks experience and rank metrics
+  - Saves profile changes back to the server
+*/
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/user';
-import { useTaskStore } from '../stores/tasks';import { useUiStore } from '../stores/ui';
+import { useTaskStore } from '../stores/tasks';
+import { useUiStore } from '../stores/ui';
 const router = useRouter();
 const userStore = useUserStore();
 const taskStore = useTaskStore();

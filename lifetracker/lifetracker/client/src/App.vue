@@ -22,6 +22,12 @@
 </template>
 
 <script setup>
+/*
+  Root application shell.
+  - Displays the top toolbar for theme and language switching
+  - Initializes UI preferences on app load
+  - Renders the current route view
+*/
 import { computed, onMounted } from 'vue';
 import { useUiStore } from './stores/ui';
 

@@ -1,3 +1,9 @@
+/*
+  Client application bootstrap for LifeTracker.
+  - Sets up Vue, Pinia, and Vue Router
+  - Protects auth routes with navigation guards
+  - Mounts the app to the DOM
+*/
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { createRouter, createWebHistory } from 'vue-router';

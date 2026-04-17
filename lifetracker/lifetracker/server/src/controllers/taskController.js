@@ -1,3 +1,7 @@
+/*
+  Task controller contains business rules for task creation, retrieval,
+  completion, and summary calculation for the current user.
+*/
 const pool = require('../config/db');
 
 const productivityZones = ['University', 'IT Park', 'Office'];

@@ -5,6 +5,11 @@
 </template>
 
 <script setup>
+/*
+  Analytics chart renders task performance metrics.
+  - Uses Chart.js to display tasks, minutes, and focus
+  - Re-renders when summary data changes
+*/
 import { watch, ref, onMounted } from 'vue';
 import { Chart, BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 

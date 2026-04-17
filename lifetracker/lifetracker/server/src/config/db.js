@@ -1,3 +1,9 @@
+/*
+  Database configuration for PostgreSQL.
+  - Validates required environment variables
+  - Creates a reusable pg Pool instance
+  - Connects immediately and logs success or failure
+*/
 const { Pool } = require('pg');
 
 const requiredVars = ['DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD'];

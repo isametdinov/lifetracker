@@ -1,3 +1,9 @@
+/*
+  Database initialization helper.
+  - Runs schema creation from schema.sql
+  - Ensures required columns exist
+  - Seeds an admin user for local development
+*/
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');

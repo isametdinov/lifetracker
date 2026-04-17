@@ -1,3 +1,10 @@
+/*
+  Authentication routes for LifeTracker.
+  - /register: create a new user
+  - /login: issue JWT token
+  - /me: retrieve logged-in user profile
+  - PATCH /me: update profile information
+*/
 const express = require('express');
 const router = express.Router();
 const { register, login, me, updateProfile } = require('../controllers/authController');

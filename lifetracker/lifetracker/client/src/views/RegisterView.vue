@@ -22,6 +22,12 @@
 </template>
 
 <script setup>
+/*
+  Registration view creates a new user account.
+  - Captures name, email, and password
+  - Sends registration request to backend
+  - Redirects to dashboard after registration
+*/
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUiStore } from '../stores/ui';

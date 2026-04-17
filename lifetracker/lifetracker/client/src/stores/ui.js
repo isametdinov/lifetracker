@@ -1,3 +1,9 @@
+/*
+  UI store manages theme and language settings.
+  - Persists user preferences in localStorage
+  - Applies dark mode CSS class globally
+  - Provides translate() helper for the UI text
+*/
 import { defineStore } from 'pinia';
 
 const translations = {

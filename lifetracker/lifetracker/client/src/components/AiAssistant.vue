@@ -68,6 +68,12 @@
 </template>
 
 <script setup>
+/*
+  AI assistant component provides chat and task review support.
+  - Sends user prompts to the backend assistant API
+  - Displays AI chat responses
+  - Handles task review question flow for completed tasks
+*/
 import { computed, ref, watch } from 'vue';
 import { useUiStore } from '../stores/ui';
 import api from '../services/api';
