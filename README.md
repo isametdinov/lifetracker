@@ -70,8 +70,5 @@ The database stores and retrieves all necessary data for the application.
 - `/api/tasks` — Task management
 - `/api/assistant/chat` — AI assistant (requires JWT)
 
-## Contributing
-
-Pull requests are welcome! Please open an issue first for major changes.
 
 ---
