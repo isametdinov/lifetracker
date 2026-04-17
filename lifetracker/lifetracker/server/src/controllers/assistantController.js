@@ -4,6 +4,9 @@
   - Builds request payload for Trinity
   - Returns AI assistant responses to the frontend
 */
+const http = require('http');
+const https = require('https');
+const { URL } = require('url');
 const TRINITY_API_URL = process.env.TRINITY_API_URL || 'https://api.trinity.ai/v1/chat/completions';
 
 // ====COMENT====
@@ -54,34 +57,75 @@ const chatCompletion = async (req, res, next) => {
       },
     ];
 
+    const postJson = (urlString, payload, headers) =>
+      new Promise((resolve, reject) => {
+        const url = new URL(urlString);
+        const client = url.protocol === 'http:' ? http : https;
+        const request = client.request(
+          {
+            hostname: url.hostname,
+            port: url.port || (url.protocol === 'http:' ? 80 : 443),
+            path: url.pathname + url.search,
+            method: 'POST',
+            headers,
+          },
+          (response) => {
+            let body = '';
+            response.on('data', (chunk) => {
+              body += chunk;
+            });
+            response.on('end', () => {
+              if (response.statusCode >= 400) {
+                const error = new Error('Trinity API returned an error');
+                error.status = response.statusCode;
+                error.body = body;
+                return reject(error);
+              }
+
+              try {
+                resolve(JSON.parse(body));
+              } catch (parseError) {
+                reject(parseError);
+              }
+            });
+          }
+        );
+
+        request.on('error', reject);
+        request.write(JSON.stringify(payload));
+        request.end();
+      });
+
     let completion;
     try {
-      const completionResponse = await fetch(trinity.url, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${trinity.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      completion = await postJson(
+        trinity.url,
+        {
           model: trinity.model,
           messages,
           temperature: 0.8,
           max_tokens: 350,
-        }),
-      });
-
-      completion = await completionResponse.json();
-    } catch (fetchError) {
-      return res.status(502).json({
+        },
+        {
+          Authorization: `Bearer ${trinity.apiKey}`,
+          'Content-Type': 'application/json',
+        }
+      );
+    } catch (requestError) {
+      console.error('Trinity API request failed:', requestError.status || requestError.message, requestError.body || '');
+      return res.status(requestError.status || 502).json({
         message:
           'Unable to reach Trinity API. Check TRINITY_API_URL, TRINITY_API_KEY, and network access from the server container.',
-        detail: fetchError.message,
+        detail: requestError.body || requestError.message,
       });
     }
 
     const responseMessage =
       completion?.choices?.[0]?.message?.content?.trim() ||
-      completion?.output?.[0]?.content?.[0]?.text?.trim();
+      completion?.choices?.[0]?.text?.trim() ||
+      completion?.output?.[0]?.content?.[0]?.text?.trim() ||
+      completion?.message?.content?.trim() ||
+      completion?.response?.output_text?.trim();
 
     res.json({ message: responseMessage || 'The assistant did not return a response.' });
   } catch (error) {
